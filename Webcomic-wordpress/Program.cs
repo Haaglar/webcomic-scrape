@@ -11,10 +11,13 @@ namespace Webcomic_wordpress
 {
     class Program
     {
-        enum ExitCodes { Success, InvalidArguments, InvalidSite };
+        enum ExitCodes { Success, InvalidArguments, InvalidSite, LostConnection };
+        //Webcomic works by having a div with the class "webcomic full" that contains the current webcomic and controls
+        //Unfortunatly the image is stored in a dynamically named class so regex it is :^)
+
         static int Main(string[] args)
         {
-            if(args.Length != 1)
+            if (args.Length != 1)
             {
                 Console.WriteLine("Usage: Webcomic-wordpress.exe URL");
                 return (int)ExitCodes.InvalidArguments;
@@ -30,25 +33,88 @@ namespace Webcomic_wordpress
                 Console.WriteLine("Usage: Webcomic-wordpress.exe URL");
                 return (int)ExitCodes.InvalidArguments;
             }
-            Console.WriteLine(address.AbsoluteUri);
+            Console.WriteLine("Trying to download from " + address.AbsoluteUri);
             String initialPage;
             using (WebClient initialRequest = new WebClient())
             {
-                initialPage = initialRequest.DownloadString(address);
+                try
+                {
+                    initialPage = initialRequest.DownloadString(address);
+                }
+                catch (WebException)
+                {
+                    Console.WriteLine("Invalid URL / Couldn't reach host");
+                    Console.WriteLine("Usage: Webcomic-wordpress.exe URL");
+                    return (int)ExitCodes.InvalidArguments;
+                }
             }
-            //Webcomic works by having a div in the class "webcomic full" that contains the current webcomic and controls
-            //Unfortunatly the image is stored in a dynamically named class so regex it is :^)
-            //Finds the webcomic image
-            Regex imageFind = new Regex(@"<img\s*?src=""([^""]*)""\s*?width=""\d*""\s*?height=""\d*""");
-            //Gets the link to the first page
-            Regex findFirstPage = new Regex(@"<a\s*?href=""([^""]*)""\s*?rel=""first""");
 
+            //Need to create a folder
             string folderDir = address.AbsoluteUri;
             foreach (var c in System.IO.Path.GetInvalidFileNameChars())
             {
                 folderDir = folderDir.Replace(c, '-');
             }
             Directory.CreateDirectory(folderDir);
+            //Finds the webcomic image
+            Regex imageFind = new Regex(@"<img\s*?src=""([^""]*)""\s*?width=""\d*""\s*?height=""\d*""");
+            //Gets the link to the first page
+            Regex findFirstPage = new Regex(@"<a\s*?href=""([^""]*)""\s*?rel=""first""");
+            //Finds the last page
+            Regex findLastPage = new Regex(@"href=""([^""]*)""\s*?rel=""last""\s*?class=""last-webcomic-link last-webcomic-link");
+            //Finds the next page
+            Regex findNextPage = new Regex(@"href=""([^""]*)""\s*?rel=""next""\s*?class=""next-webcomic-link next-webcomic-link");
+            //Now do the hard work
+
+            //Initial page crawl as we have to do a couple additional things
+            Match m1 = imageFind.Match(initialPage);
+            Match lastPageUrl = findLastPage.Match(initialPage);
+            if (m1.Length == 0 || lastPageUrl.Length==0)
+            {
+                Console.WriteLine("Site doesn't use Webcomic");
+                Console.WriteLine("Usage: Webcomic-wordpress.exe URL");
+                return (int)ExitCodes.InvalidSite;
+            }
+            string url = m1.Groups[1].Value;
+            string finalurl = lastPageUrl.Groups[1].Value;
+            using (WebClient wc = new WebClient())
+            {
+                wc.DownloadFile(url, folderDir +"/"+ Path.GetFileName(url));
+                Console.WriteLine("Downloaded: " + Path.GetFileName(url));
+            }
+            string currentPage = findFirstPage.Match(initialPage).Groups[1].Value;
+            //Start crawl loop 
+            while (!currentPage.Equals(finalurl))
+            {
+                string thisPage;
+                using (WebClient wc = new WebClient())
+                {
+                    try
+                    {
+                        thisPage = wc.DownloadString(currentPage);
+                    }
+                    catch (WebException)
+                    {
+                        Console.WriteLine("Couldn't reach host");
+                        return (int)ExitCodes.InvalidArguments;
+                    }
+                }
+                Match currentPageImage = imageFind.Match(thisPage);
+                Match nextPageUrl = findNextPage.Match(thisPage);
+                string currentPageImageURL = currentPageImage.Groups[1].Value;
+
+                using (WebClient wc = new WebClient())
+                {
+                    wc.DownloadFile(currentPageImageURL, folderDir + "/" + Path.GetFileName(currentPageImageURL));
+                }
+                Console.WriteLine("Downloaded: " + Path.GetFileName(currentPageImageURL));
+                if (nextPageUrl.Length == 0)// At the end or something  
+                {
+                    break;
+                }
+                currentPage = nextPageUrl.Groups[1].Value;
+            }
+            Console.WriteLine("Complete");
             return (int)ExitCodes.Success;
         }
     }
