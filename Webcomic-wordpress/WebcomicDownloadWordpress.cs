@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Webcomic_wordpress
 {
-    class Program
+    class WebcomicDownloadWordpress
     {
         enum ExitCodes { Success, InvalidArguments, InvalidSite, LostConnection };
         //Webcomic works by having a div with the class "webcomic full" that contains the current webcomic and controls
@@ -17,20 +13,26 @@ namespace Webcomic_wordpress
 
         static int Main(string[] args)
         {
-            if (args.Length != 1)
+            bool indexing = false; //Name based on comic number upload
+            string indexingTempFileLocation = "";
+            if (args.Length <1 || args.Length > 2)
             {
-                Console.WriteLine("Usage: Webcomic-wordpress.exe URL");
+                Console.WriteLine("Usage: Webcomic-wordpress.exe [-i] URL");
                 return (int)ExitCodes.InvalidArguments;
+            }
+            if (args.Length == 2 && args[0].Equals("-i"))
+            {
+                indexing = true;   
             }
             Uri address;
             try
             {
-                address = new Uri(args[0].StartsWith("http") ? args[0] : "http://" + args[0]);
+                address = new Uri(args[args.Length-1].StartsWith("http") ? args[args.Length - 1] : "http://" + args[args.Length - 1]);
             }
             catch
             {
                 Console.WriteLine("Invalid URL");
-                Console.WriteLine("Usage: Webcomic-wordpress.exe URL");
+                Console.WriteLine("Usage: Webcomic-wordpress.exe [-i] URL");
                 return (int)ExitCodes.InvalidArguments;
             }
             Console.WriteLine("Trying to download from " + address.AbsoluteUri);
@@ -44,7 +46,7 @@ namespace Webcomic_wordpress
                 catch (WebException)
                 {
                     Console.WriteLine("Invalid URL / Couldn't reach host");
-                    Console.WriteLine("Usage: Webcomic-wordpress.exe URL");
+                    Console.WriteLine("Usage: Webcomic-wordpress.exe [-i] URL");
                     return (int)ExitCodes.InvalidArguments;
                 }
             }
@@ -72,15 +74,26 @@ namespace Webcomic_wordpress
             if (m1.Length == 0 || lastPageUrl.Length==0)
             {
                 Console.WriteLine("Site doesn't use Webcomic");
-                Console.WriteLine("Usage: Webcomic-wordpress.exe URL");
+                Console.WriteLine("Usage: Webcomic-wordpress.exe [-i] URL");
                 return (int)ExitCodes.InvalidSite;
             }
             string url = m1.Groups[1].Value;
             string finalurl = lastPageUrl.Groups[1].Value;
+            int pageNo = 1;
             using (WebClient wc = new WebClient())
             {
-                wc.DownloadFile(url, folderDir +"/"+ Path.GetFileName(url));
-                Console.WriteLine("Downloaded: " + Path.GetFileName(url));
+                string fileName;
+                if (indexing)
+                {
+                    fileName = folderDir + "/" + "temp" + Path.GetExtension(url);
+                    indexingTempFileLocation = fileName;
+                }
+                else
+                {
+                    fileName = folderDir + "/" + Path.GetFileName(url);
+                }
+                wc.DownloadFile(url, fileName);
+                Console.WriteLine("Downloaded: " + Path.GetFileName(fileName));
             }
             string currentPage = findFirstPage.Match(initialPage).Groups[1].Value;
             //Start crawl loop 
@@ -105,14 +118,21 @@ namespace Webcomic_wordpress
 
                 using (WebClient wc = new WebClient())
                 {
-                    wc.DownloadFile(currentPageImageURL, folderDir + "/" + Path.GetFileName(currentPageImageURL));
+                    string fileName = indexing ? folderDir + "/" + pageNo.ToString("0000") + Path.GetExtension(currentPageImageURL) : folderDir + "/" + Path.GetFileName(currentPageImageURL);
+                    pageNo++;
+                    wc.DownloadFile(currentPageImageURL, fileName);
+                    Console.WriteLine("Downloaded: " + Path.GetFileName(fileName));
                 }
-                Console.WriteLine("Downloaded: " + Path.GetFileName(currentPageImageURL));
                 if (nextPageUrl.Length == 0)// At the end or something  
                 {
                     break;
                 }
                 currentPage = nextPageUrl.Groups[1].Value;
+            }
+            if (indexing)
+            {
+                Console.WriteLine("Renaming temp file");
+                File.Move(indexingTempFileLocation, folderDir + "/" + pageNo.ToString("0000") + Path.GetExtension(indexingTempFileLocation));
             }
             Console.WriteLine("Complete");
             return (int)ExitCodes.Success;
