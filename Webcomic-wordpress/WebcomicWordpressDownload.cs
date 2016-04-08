@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Webcomic_wordpress
 {
-    class WebcomicDownloadWordpress
+    class WebcomicWordpressDownload
     {
         enum ExitCodes { Success, InvalidArguments, InvalidSite, LostConnection };
         //Webcomic works by having a div with the class "webcomic full" that contains the current webcomic and controls
