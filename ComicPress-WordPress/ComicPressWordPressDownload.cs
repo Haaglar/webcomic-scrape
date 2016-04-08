@@ -1,15 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ComicPress_WordPress
 {
     class ComicPressWordPressDownload
     {
-        static void Main(string[] args)
+        enum ExitCodes { Success, InvalidArguments, InvalidSite, LostConnection };
+        static int Main(string[] args)
         {
+            if (args.Length != 1)
+            {
+                return (int)ExitCodes.InvalidArguments;
+            }
+            Uri asd = new Uri(args[0]);
+            //Console.WriteLine(asd.GetLeftPart(UriPartial.Authority));
+
+            //Looking at ComicPress webcomics (5) i see two different versions on how the pages navigate
+            //ones that use comic-nav-base as a base and others that use navi navi as a base
+            //TODO: handle them both :)  
+            return (int)ExitCodes.Success;
         }
     }
 }
