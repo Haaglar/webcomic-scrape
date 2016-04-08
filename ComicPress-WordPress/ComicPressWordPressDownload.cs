@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ComicPress_WordPress
 {
-    class Program
+    class ComicPressWordPressDownload
     {
         static void Main(string[] args)
         {
