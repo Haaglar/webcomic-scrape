@@ -8,25 +8,54 @@ namespace ComicPress_WordPress
     class ComicPressWordPressDownload
     {
         enum ExitCodes { Success, InvalidArguments, InvalidSite, LostConnection };
+        enum FileNameScheme { Original, Incremental, Title };
         static int Main(string[] args)
         {
-            if (args.Length != 1)
+            int comicCount = 0;
+            FileNameScheme naming = FileNameScheme.Original;
+            if (args.Length < 1 || args.Length > 2)
             {
+                Console.WriteLine("Usage: ComicPress-WordPress.exe [-option] URL\n");
+                Console.WriteLine(" -i     Rename files to incremental value");
+                Console.WriteLine(" -t     Rename files to page title ");
+                Console.WriteLine("\nIf no value is supplied, files aren't renamed.");
                 return (int)ExitCodes.InvalidArguments;
             }
-            string url = args[0].StartsWith("http") ? args[0] : "http://" + args[0];
-            //Console.WriteLine(asd.GetLeftPart(UriPartial.Authority));
+            //Setup naming scheme
+            if (args.Length == 2)
+            {
+                if(args[0].StartsWith("-i"))
+                {
+                    naming = FileNameScheme.Incremental;
+                }
+                else if (args[0].StartsWith("-t"))
+                {
+                    naming = FileNameScheme.Title;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid option specified");
+                    Console.WriteLine("Usage: ComicPress-WordPress.exe [-option] URL\n");
+                    Console.WriteLine("-i     Rename files to incremental value");
+                    Console.WriteLine("-t     Rename file to page title ");
+                    Console.WriteLine("If no value is supplied, files aren't renamed.");
+                }
+            }
+            //Appened http:// for bad input
+
+            string url = args[args.Length-1].StartsWith("http") ? args[args.Length - 1] : "http://" + args[args.Length - 1];
+           
+            //Comics are found under the comic id, however they may be nested under an a tag
+            //For example the image when clicked goes to the next page
+            string xpathComic = "//*[@id=\"comic\"]//img";
 
             //Looking at ComicPress webcomics (5) i see two different versions on how the pages navigate
             //ones that use comic-nav-base as a base and others that use navi navi as a base
             //And some dont have a first in the noraml place
-           
-            //Comics are found under the comic id, however they may be nested under an a tag
-            string xpathComic = "//*[@id=\"comic\"]//img";
-
-            //Need to find first, 
             string xpathFirst = "//*[@class=\"navi navi-first\" or @class=\"comic-nav-base comic-nav-first\"]";
-            string xpathNext = "//*[@rel=\"next\"]";
+            //There is also a next at the top of the page, however that might redirect to "blog" information and not a comic and break the crawl
+            string xpathNext = "//*[@class=\"navi navi-next\" or @class=\"comic-nav-base comic-nav-next\"]";
+            string xpathTitle = "//*[@class=\"post-title\"]";
             string nextURL;
 
             //Find the first page
@@ -37,7 +66,7 @@ namespace ComicPress_WordPress
                 //The user may already suppilied the first page so that was the reason no nodes were found
                 string xpathAlreadyFirst = "//*[@class=\"navi navi-first navi-void\"]";
                 nodes = webPagestart.DocumentNode.SelectNodes(xpathAlreadyFirst);
-                if (nodes == null)//Cant find it? not ComicPress Then
+                if (nodes == null)//Cant find it? not ComicPress then, or an unsopperted comicpress which i need to implement
                 {
                     Console.WriteLine("Unsupported site");
                     return (int)ExitCodes.InvalidSite;
@@ -51,7 +80,7 @@ namespace ComicPress_WordPress
 
             //Now we know its good, create folder save location
             string folderDir = url;
-            foreach (var c in System.IO.Path.GetInvalidFileNameChars())
+            foreach (var c in Path.GetInvalidFileNameChars())
             {
                 folderDir = folderDir.Replace(c, '-');
             }
@@ -61,18 +90,55 @@ namespace ComicPress_WordPress
             while (!String.IsNullOrEmpty(nextURL))
             {
                 HtmlDocument currentDocument = new HtmlWeb().Load(nextURL);
-                string comicImageLocation = currentDocument.DocumentNode.SelectNodes(xpathComic)[0].Attributes["src"].Value;
-                if(!String.IsNullOrEmpty(comicImageLocation)) //Maybe its offline
+                HtmlNodeCollection imgCol = currentDocument.DocumentNode.SelectNodes(xpathComic);
+                if(imgCol != null) //Maybe its pointing to a wrong location
                 {
+                    string comicImageLocation = imgCol[0].Attributes["src"].Value;
+                    string fileNameToSave;
+                    switch (naming)
+                    {
+                        case FileNameScheme.Title:
+                            HtmlNodeCollection titleNode = currentDocument.DocumentNode.SelectNodes(xpathTitle);
+                            if(titleNode == null)
+                            {
+                                goto default;
+                            }
+                            fileNameToSave = titleNode[0].InnerText;
+                            if(String.IsNullOrEmpty(fileNameToSave))
+                            {
+                                goto default;
+                            }
+                            foreach (var c in Path.GetInvalidFileNameChars())
+                            {
+                                fileNameToSave = fileNameToSave.Replace(c, '-');
+                            }
+                            if(File.Exists(folderDir + "/" + fileNameToSave + Path.GetExtension(comicImageLocation)))
+                            {
+                                fileNameToSave += (++comicCount).ToString("0000");
+                            }
+                            fileNameToSave += Path.GetExtension(comicImageLocation);
+                            break;
+                        case FileNameScheme.Incremental:
+                            fileNameToSave = (++comicCount).ToString("0000") + Path.GetExtension(comicImageLocation);
+                            break;
+                        default:
+                            fileNameToSave = WebUtility.UrlDecode(Path.GetFileName(comicImageLocation));
+                            foreach (var c in Path.GetInvalidFileNameChars())
+                            {
+                                fileNameToSave = fileNameToSave.Replace(c, '-');
+                            }
+                            break;
+                    }
+                    //Download the image
                     using (WebClient wc = new WebClient())
                     {
-                        wc.DownloadFile(comicImageLocation, folderDir + "/" + Path.GetFileName(comicImageLocation));
+                        wc.DownloadFile(comicImageLocation, folderDir + "/" + fileNameToSave);
                         Console.WriteLine("Downloaded: " + comicImageLocation);
                     }
                 }
-                else //Something went wrong, but dont about as the image might just be offline
+                else //Something went wrong, but dont quit as the image might just be offline
                 {
-                    Console.WriteLine("Could not download image at nextURL");
+                    Console.WriteLine("Could not download image at" + nextURL);
                 }
                 HtmlNodeCollection next = currentDocument.DocumentNode.SelectNodes(xpathNext);
                 if(next != null)
@@ -84,6 +150,7 @@ namespace ComicPress_WordPress
                     nextURL = "";
                 }
             }
+            Console.WriteLine("Complete");
             return (int)ExitCodes.Success;
         }
     }

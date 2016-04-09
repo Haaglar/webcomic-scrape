@@ -53,7 +53,7 @@ namespace Webcomic_wordpress
 
             //Need to create a folder
             string folderDir = address.AbsoluteUri;
-            foreach (var c in System.IO.Path.GetInvalidFileNameChars())
+            foreach (var c in Path.GetInvalidFileNameChars())
             {
                 folderDir = folderDir.Replace(c, '-');
             }
