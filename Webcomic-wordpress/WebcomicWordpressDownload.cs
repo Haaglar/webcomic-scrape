@@ -3,7 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
 
-namespace Webcomic_wordpress
+namespace Webcomic_WordPress
 {
     class WebcomicWordPressDownload
     {

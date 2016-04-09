@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webcomic-WordPress", "Webcomic-wordpress\Webcomic-WordPress.csproj", "{2F58D82A-CEB5-42B2-9727-5DAF2F557833}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webcomic-WordPress", "Webcomic-WordPress\Webcomic-WordPress.csproj", "{2F58D82A-CEB5-42B2-9727-5DAF2F557833}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicPress-WordPress", "ComicPress-WordPress\ComicPress-WordPress.csproj", "{72617157-0F7C-44BF-BE54-A25515FF07E6}"
 EndProject
