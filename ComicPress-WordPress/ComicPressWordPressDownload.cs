@@ -52,9 +52,9 @@ namespace ComicPress_WordPress
             //Looking at ComicPress webcomics (5) i see two different versions on how the pages navigate
             //ones that use comic-nav-base as a base and others that use navi navi as a base
             //And some dont have a first in the noraml place
-            string xpathFirst = "//*[@class=\"navi navi-first\" or @class=\"comic-nav-base comic-nav-first\"]";
+            string xpathFirst = "//*[@class=\"navi navi-first\" or @class=\"comic-nav-base comic-nav-first\" or @class=\"first\"]//@href";
             //There is also a next at the top of the page, however that might redirect to "blog" information and not a comic and break the crawl
-            string xpathNext = "//*[@class=\"navi navi-next\" or @class=\"comic-nav-base comic-nav-next\"]";
+            string xpathNext = "//*[@class=\"navi navi-next\" or @class=\"comic-nav-base comic-nav-next\" or @class=\"next\"]//@href";
             string xpathTitle = "//*[@class=\"post-title\"]";
             string nextURL;
 
