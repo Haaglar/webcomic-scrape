@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Webcomic-WordPress", "Webco
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicPress-WordPress", "ComicPress-WordPress\ComicPress-WordPress.csproj", "{72617157-0F7C-44BF-BE54-A25515FF07E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicFury", "ComicFury\ComicFury.csproj", "{7A17E296-AB29-425E-A2BA-DE473A3D0F27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{72617157-0F7C-44BF-BE54-A25515FF07E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72617157-0F7C-44BF-BE54-A25515FF07E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72617157-0F7C-44BF-BE54-A25515FF07E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A17E296-AB29-425E-A2BA-DE473A3D0F27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A17E296-AB29-425E-A2BA-DE473A3D0F27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A17E296-AB29-425E-A2BA-DE473A3D0F27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A17E296-AB29-425E-A2BA-DE473A3D0F27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
