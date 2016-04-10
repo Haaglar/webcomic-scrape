@@ -12,7 +12,7 @@ namespace ComicFury
         {
             if(args.Length != 1)
             {
-                Console.WriteLine("Usage: ComicFury.exe URL\n");
+                Console.WriteLine("Usage: ComicFury.exe URL");
                 return (int)ExitCodes.InvalidArguments;
             }
             string url = args[0].StartsWith("http") ? args[0] : "http://" + args[0];
