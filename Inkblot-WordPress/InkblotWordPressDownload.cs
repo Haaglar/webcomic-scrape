@@ -34,7 +34,7 @@ namespace Inkblot_WordPress
             string folderDir = currentUrl;
             foreach (var c in Path.GetInvalidFileNameChars())
             {
-                currentUrl = folderDir.Replace(c, '-');
+                folderDir = folderDir.Replace(c, '-');
             }
             Directory.CreateDirectory(folderDir);
             //Main loop
