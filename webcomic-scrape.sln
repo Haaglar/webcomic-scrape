@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicFury", "ComicFury\Comi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inkblot-WordPress", "Inkblot-WordPress\Inkblot-WordPress.csproj", "{7DE161FD-23C1-40A3-895D-3F8882935E74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicControl", "ComicControl\ComicControl.csproj", "{185CD7A9-F7BF-4659-802C-EB09A22C5A1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7DE161FD-23C1-40A3-895D-3F8882935E74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DE161FD-23C1-40A3-895D-3F8882935E74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DE161FD-23C1-40A3-895D-3F8882935E74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{185CD7A9-F7BF-4659-802C-EB09A22C5A1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{185CD7A9-F7BF-4659-802C-EB09A22C5A1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{185CD7A9-F7BF-4659-802C-EB09A22C5A1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{185CD7A9-F7BF-4659-802C-EB09A22C5A1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
