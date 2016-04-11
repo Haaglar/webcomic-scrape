@@ -71,7 +71,7 @@ namespace ComicControl
                 }
                 else
                 {
-                    currentUrl = [0].Attributes["href"].Value ?? "";
+                    currentUrl = findNext[0].Attributes["href"].Value ?? "";
                 }
             }
             Console.WriteLine("Complete");
