@@ -132,7 +132,8 @@ namespace ComicPress_WordPress
                     //Download the image
                     using (WebClient wc = new WebClient())
                     {
-                        wc.DownloadFile(comicImageLocation, folderDir + "/" + fileNameToSave);
+                        Uri comicLoc = new Uri(new Uri(nextURL), comicImageLocation);
+                        wc.DownloadFile(comicLoc, folderDir + "/" + fileNameToSave);
                         Console.WriteLine("Downloaded: " + comicImageLocation);
                     }
                 }

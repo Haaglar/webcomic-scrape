@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmackJeeves", "SmackJeeves\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheDuckWebcomics", "TheDuckWebcomics\TheDuckWebcomics.csproj", "{70744D13-A22E-4B1A-ADAB-9FA6AF3D314C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPathScrape", "CustomisedScrape\CustomisedScrape.csproj", "{9A209A89-D937-422C-9F18-2015E0D7D873}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{70744D13-A22E-4B1A-ADAB-9FA6AF3D314C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70744D13-A22E-4B1A-ADAB-9FA6AF3D314C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70744D13-A22E-4B1A-ADAB-9FA6AF3D314C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A209A89-D937-422C-9F18-2015E0D7D873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A209A89-D937-422C-9F18-2015E0D7D873}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A209A89-D937-422C-9F18-2015E0D7D873}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A209A89-D937-422C-9F18-2015E0D7D873}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
