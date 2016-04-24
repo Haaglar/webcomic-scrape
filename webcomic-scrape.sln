@@ -17,7 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmackJeeves", "SmackJeeves\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheDuckWebcomics", "TheDuckWebcomics\TheDuckWebcomics.csproj", "{70744D13-A22E-4B1A-ADAB-9FA6AF3D314C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPathScrape", "CustomisedScrape\CustomisedScrape.csproj", "{9A209A89-D937-422C-9F18-2015E0D7D873}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomisedScrape", "CustomisedScrape\CustomisedScrape.csproj", "{9A209A89-D937-422C-9F18-2015E0D7D873}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tapastic", "Tapastic\Tapastic.csproj", "{83FB8160-C1FC-4BEB-AE89-C2C3EEB2215A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{9A209A89-D937-422C-9F18-2015E0D7D873}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A209A89-D937-422C-9F18-2015E0D7D873}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A209A89-D937-422C-9F18-2015E0D7D873}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83FB8160-C1FC-4BEB-AE89-C2C3EEB2215A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83FB8160-C1FC-4BEB-AE89-C2C3EEB2215A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83FB8160-C1FC-4BEB-AE89-C2C3EEB2215A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83FB8160-C1FC-4BEB-AE89-C2C3EEB2215A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
