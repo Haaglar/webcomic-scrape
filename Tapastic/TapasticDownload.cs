@@ -41,6 +41,7 @@ namespace Tapastic
             HtmlDocument listDocument = requester.Load(url);
             HtmlNode scriptNode = listDocument.DocumentNode.SelectSingleNode(xPathList);
             string episodesString = scriptNode.InnerText;
+            //Remove the varible declaration and ending
             int cutStart = episodesString.IndexOf("{");
             int cutEnd = episodesString.IndexOf(";");
             string jsonCut = episodesString.Substring(cutStart, cutEnd-cutStart );
@@ -51,6 +52,7 @@ namespace Tapastic
             {
                 HtmlDocument page = requester.Load("https://tapastic.com/episode/" + episode.id);
                 HtmlNodeCollection comicImage = page.DocumentNode.SelectNodes(xPathComic);
+                //Each page can contain more than one page of a webcomic
                 foreach (var node in comicImage)
                 {
                     string address = node.Attributes["src"].Value;
