@@ -64,11 +64,11 @@ namespace ComicPress_WordPress
             if(nodes == null)
             {
                 //The user may already suppilied the first page so that was the reason no nodes were found
-                string xpathAlreadyFirst = "//*[@class=\"navi navi-first navi-void\"]";
+                string xpathAlreadyFirst = "//*[@class=\"navi navi-first navi-void\" or @class=\"comic-nav-base comic-nav-first comic-nav-void\"]";
                 nodes = webPagestart.DocumentNode.SelectNodes(xpathAlreadyFirst);
                 if (nodes == null)//Cant find it? not ComicPress then, or an unsopperted comicpress which i need to implement
                 {
-                    Console.WriteLine("Unsupported site");
+                    Console.WriteLine("Unsupported site, start not found");
                     return (int)ExitCodes.InvalidSite;
                 }
                 nextURL = url;
@@ -85,7 +85,7 @@ namespace ComicPress_WordPress
                 folderDir = folderDir.Replace(c, '-');
             }
             Directory.CreateDirectory(folderDir);
-
+            nextURL = url;
             //Main loop
             while (!String.IsNullOrEmpty(nextURL))
             {
@@ -94,6 +94,7 @@ namespace ComicPress_WordPress
                 if(imgCol != null) //Maybe its pointing to a wrong location
                 {
                     string comicImageLocation = imgCol[0].Attributes["src"].Value;
+                    string extension;
                     string fileNameToSave;
                     switch (naming)
                     {
@@ -112,17 +113,19 @@ namespace ComicPress_WordPress
                             {
                                 fileNameToSave = fileNameToSave.Replace(c, '-');
                             }
-                            if(File.Exists(folderDir + "/" + fileNameToSave + Path.GetExtension(comicImageLocation)))
+                            extension = Path.GetExtension(new Uri(comicImageLocation).GetLeftPart(UriPartial.Path));
+                            if (File.Exists(folderDir + "/" + fileNameToSave + extension))
                             {
                                 fileNameToSave += (++comicCount).ToString("0000");
                             }
                             fileNameToSave += Path.GetExtension(comicImageLocation);
                             break;
                         case FileNameScheme.Incremental:
-                            fileNameToSave = (++comicCount).ToString("0000") + Path.GetExtension(comicImageLocation);
+                            extension = Path.GetExtension(new Uri(comicImageLocation).GetLeftPart(UriPartial.Path));
+                            fileNameToSave = (++comicCount).ToString("0000") + extension;
                             break;
                         default:
-                            fileNameToSave = WebUtility.UrlDecode(Path.GetFileName(comicImageLocation));
+                            fileNameToSave = WebUtility.UrlDecode(Path.GetFileName(new Uri(comicImageLocation).GetLeftPart(UriPartial.Path)));
                             foreach (var c in Path.GetInvalidFileNameChars())
                             {
                                 fileNameToSave = fileNameToSave.Replace(c, '-');
