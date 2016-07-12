@@ -15,7 +15,7 @@ namespace CustomisedScrape
             int comicNo = 0;
             if (args.Length == 0 || args.Length % 2 != 1)
             {
-                Console.WriteLine("Usage: XPathScrape.exe URL");
+                Console.WriteLine("Usage: XPathScrape.exe [OPTIONS] URL");
                 return (int)ExitCodes.InvalidArguments;
             }
 
@@ -35,7 +35,7 @@ namespace CustomisedScrape
                 }
                 else
                 {
-                    Console.WriteLine("Usage: CustomisedScrape.exe [OPTIONS] URL");
+                    Console.WriteLine("Usage: XPathScrape.exe [OPTIONS] URL");
                     return (int)ExitCodes.InvalidArguments;
                 }
             }
@@ -54,8 +54,6 @@ namespace CustomisedScrape
             bool running = true;
             while(running)
             {
-                Console.WriteLine(xPathNext);
-                Console.WriteLine("Readgin page " + url);
                 HtmlDocument document = requester.Load(url);
                 HtmlNode comicImage;
                 try
@@ -69,14 +67,14 @@ namespace CustomisedScrape
                 }
                 if(comicImage == null)
                 {
-                    Console.WriteLine("Bad image id supplied, couldn't find comic");
+                    Console.WriteLine("Bad image id supplied, couldn't find comic on " + url);
                     return (int)ExitCodes.InvalidArguments;
                 }
                 using (WebClient wc = new WebClient())
                 {
                     Uri construct = new Uri(new Uri(url), comicImage.Attributes["src"].Value);
                     wc.DownloadFile(construct, folderDirSlash + (++comicNo).ToString("0000") + Path.GetExtension(comicImage.Attributes["src"].Value));
-                    Console.WriteLine("Downloaded image on page " + url);
+                    Console.WriteLine("Downloaded: " + construct.ToString());
                 }
                 HtmlNode next;
                 try

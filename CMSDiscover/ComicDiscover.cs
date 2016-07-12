@@ -30,6 +30,14 @@ namespace CMSDiscover
                 Console.WriteLine("Use TheDuckWebcomics.exe");
                 return (int)ExitCodes.Success;
             }
+            //Comic fury
+            Regex comicFuryReg = new Regex(@"https?://(.+\.)(thecomicseries\.com|the-comic\.org|thecomicstrip\.org|webcomic\.ws|cfw\.me)");
+            Match isCF = comicFuryReg.Match(args[0]);
+            if (isCF.Success)
+            {
+                Console.WriteLine("Use ComicFury.exe");
+                return (int)ExitCodes.Success;
+            }
             return (int)ExitCodes.InvalidSite;
         }
     }
