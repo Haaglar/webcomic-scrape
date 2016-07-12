@@ -10,7 +10,12 @@ namespace CMSDiscover
         {
             if (args.Length != 1)
             {
-                Console.WriteLine("Usage: asd.exe URL");
+                Console.WriteLine("Usage: CMSDiscover.exe URL");
+                return (int)ExitCodes.InvalidArguments;
+            }
+            if(!args[0].StartsWith("http"))
+            {
+                Console.WriteLine("URL must start with http(s)://");
                 return (int)ExitCodes.InvalidArguments;
             }
             //Tests -- URL based
@@ -31,11 +36,19 @@ namespace CMSDiscover
                 return (int)ExitCodes.Success;
             }
             //Comic fury
-            Regex comicFuryReg = new Regex(@"https?://(.+\.)(thecomicseries\.com|the-comic\.org|thecomicstrip\.org|webcomic\.ws|cfw\.me)");
+            Regex comicFuryReg = new Regex(@"https?://([^\.]+\.)(thecomicseries\.com|the-comic\.org|thecomicstrip\.org|webcomic\.ws|cfw\.me)");
             Match isCF = comicFuryReg.Match(args[0]);
             if (isCF.Success)
             {
                 Console.WriteLine("Use ComicFury.exe");
+                return (int)ExitCodes.Success;
+            }
+            //Smack Jeeves
+            Regex smackJvReg = new Regex(@"https?://([^\.]+\.)(thewebcomic\.com|smackjeeves\.com)");
+            Match isSJ = smackJvReg.Match(args[0]);
+            if (isSJ.Success)
+            {
+                Console.WriteLine("Use SmackJeeves.exe");
                 return (int)ExitCodes.Success;
             }
             return (int)ExitCodes.InvalidSite;
