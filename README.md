@@ -15,3 +15,8 @@ A collection of C# tools for batch downloading pages off various webcomic conten
 ## Compiling information
 The application has been developed using VS2015 with a target .NET framework of 4.5.2.
 The project uses HTMLAglitiyPack for HTML parsing, make sure you have installed it via NuGet
+
+## Instructions
+Please check if the webcomic that you want to download has left the comic directory open as a batch download using other tool will be faster and use less of the artist site bandwidth.
+
+Usage "application".exe URL
