@@ -85,6 +85,14 @@ namespace CMSDiscover
                     Console.WriteLine("Use Webcomic-WordPress.exe");
                     return (int)ExitCodes.Success;
                 }
+                //ComicControl
+                Regex comicControl = new Regex(@"/comiccontrol/");
+                Match isCC = comicControl.Match(webpage);
+                if(isCC.Success)
+                {
+                    Console.WriteLine("Use ComicControl.exe");
+                    return (int)ExitCodes.Success;
+                }
             }
             return (int)ExitCodes.InvalidSite;
         }
