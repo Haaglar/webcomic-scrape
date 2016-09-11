@@ -59,25 +59,33 @@ namespace ComicPress_WordPress
             string nextURL;
 
             //Find the first page
-            HtmlDocument webPagestart = new HtmlWeb().Load(url);
-            HtmlNodeCollection nodes = webPagestart.DocumentNode.SelectNodes(xpathFirst);
-            if(nodes == null)
+            try
             {
-                //The user may already suppilied the first page so that was the reason no nodes were found
-                string xpathAlreadyFirst = "//*[@class=\"navi navi-first navi-void\" or @class=\"comic-nav-base comic-nav-first comic-nav-void\"]";
-                nodes = webPagestart.DocumentNode.SelectNodes(xpathAlreadyFirst);
-                if (nodes == null)//Cant find it? not ComicPress then, or an unsopperted comicpress which i need to implement
-                {
-                    Console.WriteLine("Unsupported site, start not found");
-                    return (int)ExitCodes.InvalidSite;
-                }
-                nextURL = url;
-            }
-            else
-            {
-                nextURL = nodes[0].Attributes["href"].Value;
-            }
 
+                HtmlDocument webPagestart = new HtmlWeb().Load(url);
+                HtmlNodeCollection nodes = webPagestart.DocumentNode.SelectNodes(xpathFirst);
+                if (nodes == null)
+                {
+                    //The user may already suppilied the first page so that was the reason no nodes were found
+                    string xpathAlreadyFirst = "//*[@class=\"navi navi-first navi-void\" or @class=\"comic-nav-base comic-nav-first comic-nav-void\"]";
+                    nodes = webPagestart.DocumentNode.SelectNodes(xpathAlreadyFirst);
+                    if (nodes == null)//Cant find it? not ComicPress then, or an unsopperted comicpress which i need to implement
+                    {
+                        Console.WriteLine("Unsupported site, start not found");
+                        return (int)ExitCodes.InvalidSite;
+                    }
+                    nextURL = url;
+                }
+                else
+                {
+                    nextURL = nodes[0].Attributes["href"].Value;
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Failed to Load url");
+                return (int)ExitCodes.InvalidSite;
+            }
             //Now we know its good, create folder save location
             string folderDir = url;
             foreach (var c in Path.GetInvalidFileNameChars())
