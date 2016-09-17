@@ -21,7 +21,16 @@ namespace SmackJeeves
             string xPathImage = "//*[@id=\"comic_image\"]";
 
             HtmlWeb requester = new HtmlWeb();
-            HtmlDocument webPage = requester.Load(url);
+            HtmlDocument webPage;
+            try
+            {
+                webPage = requester.Load(url);
+            }
+            catch
+            {
+                Console.WriteLine("Invalid URL");
+                return (int)ExitCodes.InvalidSite;
+            }
             HtmlNodeCollection naviagtionSelection = webPage.DocumentNode.SelectNodes(xPathNavigation);
             if(naviagtionSelection == null)
             {
